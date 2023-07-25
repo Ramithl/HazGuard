@@ -24,7 +24,7 @@ const tcpServer = net.createServer(socket => {
     socket.on("data", data => {
         const jsonData = JSON.parse(data.toString())
         console.log(jsonData)
-        let sensorValues = db.collection(jsonData.deviceID).doc('fulldata').get().sensorValues // CHANGE
+        db.collection(jsonData.deviceID).doc('fulldata').get().sensorValues // CHANGE
         sensorValues.shift()
         sensorValues.push(jsonData.ch4)
         db.collection(jsonData.deviceID).doc('fulldata').update({sensorValues: {sensorValues}})

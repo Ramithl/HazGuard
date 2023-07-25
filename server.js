@@ -6,7 +6,7 @@ const socketIo = require('socket.io');
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue, DocumentSnapshot } = require('firebase-admin/firestore');
 
-const serviceAccount = require('../Firebase/hazguard-355-firebase-adminsdk-j0vly-ffc0d647dd.json');
+const serviceAccount = '../Firebase/hazguard.json'
 
 initializeApp({
   credential: cert(serviceAccount)
@@ -63,7 +63,14 @@ server.on('connection', (ws) => {
 
 //root
 app.get('/', (req, res) => {
-  res.send('Hello This is Express Backend');
+  const tempRef = db.collection('112569').doc('sensorData')
+    tempRef.get()
+      .then((docSnapshot) => {
+        let tempArr = docSnapshot.data()
+        // console.log(tempArr)
+        res.send(tempArr);
+      })
+  
 });
 
 // Socket connection

@@ -8,6 +8,11 @@ const { getFirestore, Timestamp, FieldValue, DocumentSnapshot } = require('fireb
 
 const serviceAccount = '../Firebase/hazguard.json'
 
+const accountSID = process.env.TWILIO_SID
+const authToken = process.env.AUTH_TOKEN
+
+const client = require('twilio')(accountSID, authToken)
+
 initializeApp({
   credential: cert(serviceAccount)
 });
@@ -23,12 +28,27 @@ const server = new WebSocket.Server({ port: 8080 });
 
 const wss = server;
 
+let callPlaced = false;
+
 //Web Sockets Server
 server.on('connection', (ws) => {
   console.log('Client connected!');
 
   ws.on('message', (data) => {
     const jsonData = JSON.parse(data.toString());
+
+    // Call Function
+    if (jsonData['co'] > 20 && callPlaced == false) {
+      client.calls.create({
+        to: '+94767802033',
+        from: '+12294148275',
+        url: 'https://handler.twilio.com/twiml/EH887f8352bcf78013f9534125e067bd43'
+      })
+        .then(call => console.log(call.sid));
+      callPlaced == true;
+    }
+
+
     console.log(jsonData)
     const sensorDataRef = db.collection(jsonData.deviceID.toString()).doc('sensorData')
 
@@ -40,13 +60,13 @@ server.on('connection', (ws) => {
             let dataArr = data[element]
             dataArr.shift()
             dataArr.push(jsonData[element])
-            docSnapshot.ref.set({ [element]: dataArr }, {merge: true})
+            docSnapshot.ref.set({ [element]: dataArr }, { merge: true })
           })
         } else {
           fields.forEach((element) => {
             (initArr = []).length = 5;
             initArr.fill(0);
-            docSnapshot.ref.set({ [element]: initArr }, {merge: true})
+            docSnapshot.ref.set({ [element]: initArr }, { merge: true })
           })
         }
       })
@@ -64,13 +84,13 @@ server.on('connection', (ws) => {
 //root
 app.get('/', (req, res) => {
   const tempRef = db.collection('112569').doc('sensorData')
-    tempRef.get()
-      .then((docSnapshot) => {
-        let tempArr = docSnapshot.data()
-        // console.log(tempArr)
-        res.send(tempArr);
-      })
-  
+  tempRef.get()
+    .then((docSnapshot) => {
+      let tempArr = docSnapshot.data()
+      // console.log(tempArr)
+      res.send(tempArr);
+    })
+
 });
 
 // Socket connection
@@ -90,7 +110,7 @@ io.on('connection', (socket) => {
   socket.on('client', (data) => {
     console.log(`IO client recieved: `);
     let array = { alarm: 1 }
-    wss.clients.forEach(function(client) {
+    wss.clients.forEach(function (client) {
       client.send(JSON.stringify(array));
     });
   });

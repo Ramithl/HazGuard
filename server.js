@@ -6,7 +6,7 @@ const socketIo = require('socket.io');
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue, DocumentSnapshot } = require('firebase-admin/firestore');
 
-const serviceAccount = './Firebase/hazguard.json'
+const serviceAccount = '../Firebase/hazguard.json'
 
 initializeApp({
   credential: cert(serviceAccount)

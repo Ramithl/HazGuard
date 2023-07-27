@@ -82,10 +82,11 @@ server.on('connection', (ws) => {
   });
 
   ws.on('close', () => {
-    console.log('Client disconnected!');
     if (clientSocket){
       clientSocket.emit('hazdc', {connected: false})
     }
+    console.log('Client disconnected!');
+    
   });
 });
 

@@ -27,12 +27,17 @@ const io = socketIo(socket_server);
 const server = new WebSocket.Server({ port: 8080 });
 
 const wss = server;
+let clientSocket;
 
 let callPlaced = false;
 
 //Web Sockets Server
 server.on('connection', (ws) => {
   console.log('Client connected!');
+
+  if (clientSocket){
+    clientSocket.emit('hazdc', {connected: true})
+  }
 
   ws.on('message', (data) => {
     const jsonData = JSON.parse(data.toString());
@@ -78,6 +83,9 @@ server.on('connection', (ws) => {
 
   ws.on('close', () => {
     console.log('Client disconnected!');
+    if (clientSocket){
+      clientSocket.emit('hazdc', {connected: false})
+    }
   });
 });
 
@@ -95,6 +103,8 @@ app.get('/', (req, res) => {
 
 // Socket connection
 io.on('connection', (socket) => {
+
+  clientSocket = socket;
   console.log('IO client connected');
   setInterval(() => {
     const tempRef = db.collection('112569').doc('sensorData')

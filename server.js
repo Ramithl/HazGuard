@@ -35,10 +35,6 @@ let callPlaced = false;
 server.on('connection', (ws) => {
   console.log('Client connected!');
 
-  if (clientSocket){
-    clientSocket.emit('hazdc', {connected: true})
-  }
-
   ws.on('message', (data) => {
     const jsonData = JSON.parse(data.toString());
 

@@ -6,10 +6,10 @@ const socketIo = require('socket.io');
 const { initializeApp, applicationDefault, cert } = require('firebase-admin/app');
 const { getFirestore, Timestamp, FieldValue, DocumentSnapshot } = require('firebase-admin/firestore');
 
-const serviceAccount = '../Firebase/hazguard.json'
+const serviceAccount = './Firebase/hazguard.json'
 
-const accountSID = process.env.TWILIO_SID
-const authToken = process.env.AUTH_TOKEN
+const accountSID = "ACd82a615b37fa580d5d5a54f9d76b999"
+const authToken = "1303feed3cb9745c5dd57bf110129171"
 
 const client = require('twilio')(accountSID, authToken)
 

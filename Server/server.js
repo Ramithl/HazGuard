@@ -8,7 +8,11 @@ const { getFirestore, Timestamp, FieldValue, DocumentSnapshot } = require('fireb
 
 const serviceAccount = './Firebase/hazguard.json'
 
+<<<<<<< HEAD:server.js
 const accountSID = "ACd82a615b37fa580d5d5a54f9d76b999b"
+=======
+const accountSID = "ACd82a615b37fa580d5d5a54f9d76b999"
+>>>>>>> old-state:Server/server.js
 const authToken = "1303feed3cb9745c5dd57bf110129171"
 
 const client = require('twilio')(accountSID, authToken)
